@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'mandrill'
 
+enable :sessions
+
 def send_message(from, body)
 m = Mandrill::API.new
  message = {  
@@ -26,6 +28,10 @@ m = Mandrill::API.new
 
 get '/index' do
 	erb :index
+end 
+
+get '/counter' do
+	erb :counter
 end
 
 post '/send-mail' do
@@ -33,4 +39,10 @@ post '/send-mail' do
 	send_message(params[:from], params[:body]) 
 	redirect to('/index')
 
+end
+
+get '/counter' do
+	session['counter'] ||= 0
+	session['counter'] += 1
+	"You've hit this page #{session['counter']} times."
 end
